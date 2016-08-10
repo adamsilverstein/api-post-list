@@ -22,9 +22,11 @@ function api_post_list_scripts() {
 }
 add_action( 'wp_scripts', 'api_post_list_scripts' );
 
-
-
-
+/**
+ * Build the shortcode.
+ * @param  String $atts The shortcode parameters.
+ * @return String       The rendered shortcode.
+ */
 function api_post_list_shortcode( $atts ) {
 	wp_enqueue_script( 'api_pl', API_POST_LIST_URL . 'js/api-pl.js', array( 'wp-backbone', 'wp-api' ), API_POST_LIST_VERSION, true );
 	wp_enqueue_style( 'api_pl', API_POST_LIST_URL . 'css/api-post-list.css', API_POST_LIST_VERSION, true );
@@ -34,14 +36,16 @@ function api_post_list_shortcode( $atts ) {
 
 	// Build a shell.
 	$data = explode( ',', $atts['ids'] );
-	$count = sizeof( $data );
-	while ( $count-- >= 0 ) {
-		$to_return .= '<div class="list-loading">
-						<div class="api-post-list-image">
-						</div>
-						<div class="api-post-list-title">
-						</div>
-					 </div>';
+	$count = sizeof( $data ) ;
+
+	// Add one block per post in the view.
+	while ( $count-- > 0 ) {
+		$to_return .= '
+			<div class="list-loading">
+				<div class="api-post-list-image"></div>
+				<div class="api-post-list-title"></div>
+			</div>
+		';
 	}
 
 	$to_return .= '</div>';
