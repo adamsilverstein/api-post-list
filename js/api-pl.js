@@ -29,23 +29,25 @@
 			var $area = $( area ),
 				data  = $area.data(),
 
-
-				// Set up a new collection view to contain the posts.
-				collectionView = new PostsCollectionView();
+			// Set up a new collection view to contain the posts.
+			collectionView = new PostsCollectionView();
 
 			// Get the posts from the api.
 			var posts = new wp.api.collections.Posts();
 
 			// Fetch the posts, returning a promise.
-			var promise = posts.fetch( { 'data': { '_embed': true } } );
+			var promise = posts.fetch( {
+				'data': {
+					'include': data.posts.ids,
+					'_embed': true
+				}
+			} );
 
 			// Continue when the fetch completes.
 			promise.complete( function() {
-					//console.log( posts );
 
 				// Loop thru the posts, creating and adding views.
 				_.each( posts.models, function( post ) {
-					//console.log( post );
 
 					var singlePost = new SinglePostView( { 'model': post } );
 
@@ -61,7 +63,6 @@
 				collectionView.render();
 				$placeholder.html( collectionView.el );
 				collectionView.views.ready();
-
 
 			} );
 
