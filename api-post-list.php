@@ -1,4 +1,6 @@
 <?php
+namespace apipostlist;
+
 /**
  * Plugin Name: API Post List
  * Version: 0.0.1
@@ -13,14 +15,6 @@
 
 define( 'API_POST_LIST_URL', plugin_dir_url( __FILE__ ) );
 define( 'API_POST_LIST_VERSION', '0.0.1' );
-
-
-
-
-function api_post_list_scripts() {
-
-}
-add_action( 'wp_scripts', 'api_post_list_scripts' );
 
 /**
  * Build the shortcode.
@@ -52,12 +46,11 @@ function api_post_list_shortcode( $atts ) {
 
 	return $to_return;
 }
-add_shortcode( 'api_post_list', 'api_post_list_shortcode' );
+add_shortcode( 'api_post_list', '\apipostlist\api_post_list_shortcode' );
 
-
-
-
-
+/**
+ * Add the app templates to the site footer.
+ */
 function api_post_list_backbone_tempalates( ) {
 	?>
 	<script type="text/html" id="tmpl-single-post">
@@ -78,4 +71,4 @@ function api_post_list_backbone_tempalates( ) {
 	</script>
 	<?php
 }
-add_action( 'wp_print_footer_scripts', 'api_post_list_backbone_tempalates' );
+add_action( 'wp_print_footer_scripts', '\apipostlist\api_post_list_backbone_tempalates' );
