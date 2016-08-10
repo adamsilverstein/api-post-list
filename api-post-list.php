@@ -58,8 +58,15 @@ function api_post_list_backbone_tempalates( ) {
 	?>
 	<script type="text/html" id="tmpl-single-post">
 			<# console.log( data.attributes ); #>
+		if ( ! _.isUndefined( data.attributes._embedded['wp:featuredmedia'] ) ) {
+		#>
+
 		<div class="api-post-list-image">
- 		</div>
+			<img width="50px" height="50px" src="{{ data.attributes._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
+		</div>
+		<#
+		}
+		#>
 		<div class="api-post-list-title">
 		{{ data.attributes.title.rendered }}
 		</div>
