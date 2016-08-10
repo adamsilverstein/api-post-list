@@ -27,6 +27,7 @@ add_action( 'wp_scripts', 'api_post_list_scripts' );
 
 function api_post_list_shortcode( $atts ) {
 	wp_enqueue_script( 'api_pl', API_POST_LIST_URL . 'js/api-pl.js', array( 'wp-backbone', 'wp-api' ), API_POST_LIST_VERSION, true );
+	wp_enqueue_style( 'api_pl', API_POST_LIST_URL . 'css/api-post-list.css', API_POST_LIST_VERSION, true );
 
 	$rand_id = rand();
 	$to_return = '<div class="api-post-list-container" data-plid="' . esc_attr( $rand_id ) . '" data-posts="' . esc_attr( json_encode( $atts ) ) .'">';
