@@ -29,7 +29,23 @@ function api_post_list_shortcode( $atts ) {
 	wp_enqueue_script( 'api_pl', API_POST_LIST_URL . 'js/api-pl.js', array( 'wp-backbone', 'wp-api' ), API_POST_LIST_VERSION, true );
 
 	$rand_id = rand();
-	return '<div class="api-post-list-container" data-plid="' . esc_attr( $rand_id ) . '" data-posts="' . esc_attr( json_encode( $atts ) ) .'"></div>';
+	$to_return = '<div class="api-post-list-container" data-plid="' . esc_attr( $rand_id ) . '" data-posts="' . esc_attr( json_encode( $atts ) ) .'">';
+
+	// Build a shell.
+	$data = explode( ',', $atts['ids'] );
+	$count = sizeof( $data );
+	while ( $count-- >= 0 ) {
+		$to_return .= '<div class="list-loading">
+						<div class="api-post-list-image">
+						</div>
+						<div class="api-post-list-title">
+						</div>
+					 </div>';
+	}
+
+	$to_return .= '</div>';
+
+	return $to_return;
 }
 add_shortcode( 'api_post_list', 'api_post_list_shortcode' );
 
