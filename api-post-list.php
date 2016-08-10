@@ -57,7 +57,8 @@ add_shortcode( 'api_post_list', 'api_post_list_shortcode' );
 function api_post_list_backbone_tempalates( ) {
 	?>
 	<script type="text/html" id="tmpl-single-post">
-			<# console.log( data.attributes ); #>
+		<#
+		console.log( data.attributes );
 		if ( ! _.isUndefined( data.attributes._embedded['wp:featuredmedia'] ) ) {
 		#>
 
