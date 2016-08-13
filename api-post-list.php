@@ -22,8 +22,16 @@ define( 'API_POST_LIST_VERSION', '1.0.0' );
  * @return String       The rendered shortcode.
  */
 function api_post_list_shortcode( $atts ) {
-	wp_enqueue_script( 'api_pl', API_POST_LIST_URL . 'js/api-pl.js', array( 'wp-backbone', 'wp-api' ), API_POST_LIST_VERSION, true );
-	wp_enqueue_style( 'api_pl', API_POST_LIST_URL . 'css/api-post-list.css', API_POST_LIST_VERSION, true );
+	global $post;
+
+	wp_enqueue_script( 'api-pl-js', API_POST_LIST_URL . 'js/api-post-list.js', array( 'wp-backbone', 'wp-api' ), API_POST_LIST_VERSION, true );
+	wp_enqueue_style( 'api-pl-css', API_POST_LIST_URL . 'css/api-post-list.css', API_POST_LIST_VERSION, true );
+
+	$api_settings = array (
+		'canEdit' => current_user_can( 'edit_post', $post->ID ),
+	);
+
+	wp_localize_script( 'api-pl-js', 'apiPostListSettings', $api_settings );
 
 	$rand_id = rand();
 	$to_return = '<div class="api-post-list-container" data-plid="' . esc_attr( $rand_id ) . '" data-posts="' . esc_attr( json_encode( $atts ) ) .'">';
@@ -52,10 +60,12 @@ add_shortcode( 'api_post_list', '\apipostlist\api_post_list_shortcode' );
  * Add the app templates to the site footer.
  */
 function api_post_list_backbone_tempalates( ) {
+	global $post;
+
+	$content_editable = current_user_can( 'edit_post', $post->ID ) ? 'contenteditable' : '';
 	?>
 	<script type="text/html" id="tmpl-single-post">
 		<#
-		console.log( data.attributes );
 		if ( ! _.isUndefined( data.attributes._embedded['wp:featuredmedia'] ) ) {
 		#>
 
@@ -65,7 +75,7 @@ function api_post_list_backbone_tempalates( ) {
 		<#
 		}
 		#>
-		<div class="api-post-list-title">
+		<div class="api-post-list-title" <?php echo esc_attr( $content_editable ); ?> >
 		{{ data.attributes.title.rendered }}
 		</div>
 	</script>
