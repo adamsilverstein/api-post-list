@@ -9,9 +9,38 @@
 		// Set up our template function: wp.template returns a function.
 		template: wp.template( 'single-post' ),
 
+		/**
+		 * Watch for events on the view.
+		 */
+		events: {
+			'input .api-post-list-title': 'debouncedTitleInputHandler'
+		},
+
+		/**
+		 * Handle input events for the title field.
+		 *
+		 * @param  Object e Event object.
+		 */
+		titleInput: function( e ) {
+			this.model.set( 'title', jQuery( e.currentTarget ).text() );
+			this.model.save();
+		},
+
+		/**
+		 * A debounced version of the title change input handler.
+		 *
+		 * @param  Object e Event object.
+		 */
+		debouncedTitleInputHandler: _.debounce( function( e ) {
+			this.titleInput( e );
+			} , 1000 ),
+
+		/**
+		 * Render the single post view.
+		 */
 		render: function() {
 
-			// Render this view by passing the model to the templae function.
+			// Render this view by passing the model to the template function.
 			this.$el.html( this.template( this.model ) );
 		}
 	} );
