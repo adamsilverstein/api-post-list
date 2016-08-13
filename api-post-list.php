@@ -70,13 +70,20 @@ function api_post_list_backbone_tempalates( ) {
 		#>
 
 		<div class="api-post-list-image">
-			<img width="50px" height="50px" src="{{ data.attributes._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
+			<a href="{{ data.attributes.link }}">
+				<img width="50px" height="50px" src="{{ data.attributes._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
+			</a>
 		</div>
 		<#
 		}
 		#>
 		<div class="api-post-list-title" <?php echo esc_attr( $content_editable ); ?> >
-		{{ data.attributes.title.rendered }}
+			<a href="{{ data.attributes.link }}">
+				{{ data.attributes.title.rendered }}
+			</a>
+		</div>
+		<div class="api-post-list-author-name">
+			By: {{ data.attributes._embedded.author[0].name }}
 		</div>
 	</script>
 	<?php
