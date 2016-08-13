@@ -15,6 +15,7 @@
 
 .list-loading .api-post-list-title {
 	background-color: #ddd;
+	animation: fadeColor 1.5s ease infinite;
 }
 
 .api-post-list-title {
