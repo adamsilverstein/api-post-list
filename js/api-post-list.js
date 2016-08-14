@@ -33,7 +33,7 @@
 		 */
 		debouncedTitleInputHandler: _.debounce( function( e ) {
 			this.titleInput( e );
-			} , 1000 ),
+			} , 2000 ),
 
 		/**
 		 * Render the single post view.
