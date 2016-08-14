@@ -13,7 +13,20 @@
 		 * Watch for events on the view.
 		 */
 		events: {
-			'input .api-post-list-title': 'debouncedTitleInputHandler'
+			'input .api-post-list-title': 'debouncedTitleInputHandler',
+			'click .api-post-list-highlight span': 'clickHightlight'
+		},
+
+		initialize: function( options ) {
+			this.model.on( 'change:postListFavorite', this.render, this );
+		},
+
+		/**
+		 * Handle clicking the star icon.
+		 */
+		clickHightlight: function() {
+			this.model.set( 'postListFavorite', ! this.model.get( 'postListFavorite' ) );
+			this.model.save();
 		},
 
 		/**
