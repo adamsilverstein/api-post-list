@@ -28,7 +28,8 @@ function api_post_list_shortcode( $atts ) {
 	wp_enqueue_style( 'api-pl-css', API_POST_LIST_URL . 'css/api-post-list.css', API_POST_LIST_VERSION, true );
 
 	$api_settings = array (
-		'canEdit' => current_user_can( 'edit_post', $post->ID ),
+		'canEdit'        => current_user_can( 'edit_post', $post->ID ),
+		'isUserLoggedIn' =>is_user_logged_in(),
 	);
 
 	wp_localize_script( 'api-pl-js', 'apiPostListSettings', $api_settings );
