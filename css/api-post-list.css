@@ -48,4 +48,13 @@
 
 .api-post-list-highlight {
 	float: right;
+	font-size: 22px;
+	line-height: 24px;
+}
+
+.api-post-list-highlight > span:hover:before,
+.api-post-list-highlight.is-favorite > span:before {
+	content: "\2605";
+	position: absolute;
+	color: gold;
 }
