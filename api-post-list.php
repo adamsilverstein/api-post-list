@@ -100,3 +100,41 @@ function api_post_list_backbone_tempalates( ) {
 	<?php
 }
 add_action( 'wp_print_footer_scripts', '\apipostlist\api_post_list_backbone_tempalates' );
+
+
+/**
+ * Add the post faveorite data to the REST API response.
+ * @param $response The API responde object.
+ * @param $post     The Post object.
+ *
+ * @return mixed
+ */
+function rest_prepare_post_meta( $response, $post ) {
+
+	// If the user isn't logged in, bail.
+	if ( ! is_user_logged_in() ) {
+		return $response;
+	}
+
+	// Get the user's favorites.
+	$user_favorites = json_decode( get_user_meta( get_current_user_id(), 'api-post-list-user-favorites', true ) );
+
+	if (
+		'' !== $user_favorites &&
+		false !== $user_favorites &&
+		is_array( $user_favorites )
+	) {
+
+		// Is the current post in the user's favorites?
+		if ( in_array( $post->ID, $user_favorites ) ) {
+			$response->data['postListFavorite'] = true;
+		} else {
+			$response->data['postListFavorite'] = false;
+		}
+
+	}
+
+	// Return the modified response.
+	return $response;
+}
+add_filter( 'rest_prepare_post', '\apipostlist\rest_prepare_post_meta', 10, 2 );
