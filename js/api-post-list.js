@@ -39,9 +39,8 @@
 		 * Render the single post view.
 		 */
 		render: function() {
-
-			// Render this view by passing the model to the template function.
-			this.$el.html( this.template( this.model ) );
+			// Render view by passing the model attributes to the template function.
+			this.$el.html( this.template( this.model.attributes ) );
 		}
 	} );
 
