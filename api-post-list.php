@@ -67,14 +67,23 @@ function api_post_list_backbone_tempalates( ) {
 	?>
 	<script type="text/html" id="tmpl-single-post">
 		<#
-		if ( ! _.isUndefined( data.attributes._embedded['wp:featuredmedia'] ) ) {
+		if ( apiPostListSettings.isUserLoggedIn ) {
 		#>
 
-		<div class="api-post-list-image">
-			<a href="{{ data.attributes.link }}">
-				<img width="50px" height="50px" src="{{ data.attributes._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
-			</a>
-		</div>
+			<div class="api-post-list-highlight">
+				<input type="checkbox" id="highlight">
+			</div>
+		<#
+		}
+		#>
+		<#
+		if ( ! _.isUndefined( data.attributes._embedded['wp:featuredmedia'] ) ) {
+		#>
+			<div class="api-post-list-image">
+				<a href="{{ data.attributes.link }}">
+					<img width="50px" height="50px" src="{{ data.attributes._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
+				</a>
+			</div>
 		<#
 		}
 		#>
