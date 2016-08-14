@@ -70,8 +70,8 @@ function api_post_list_backbone_tempalates( ) {
 		if ( apiPostListSettings.isUserLoggedIn ) {
 		#>
 
-			<div class="api-post-list-highlight">
-				<input type="checkbox" id="highlight">
+			<div class="api-post-list-highlight{{ data.postListFavorite ? ' is-favorite' : '' }}">
+				<span>☆</span>
 			</div>
 		<#
 		}
