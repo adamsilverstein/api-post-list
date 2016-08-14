@@ -77,7 +77,6 @@ function api_post_list_backbone_tempalates( ) {
 		}
 		#>
 		<#
-		if ( ! _.isUndefined( data.attributes._embedded['wp:featuredmedia'] ) ) {
 		if ( ! _.isUndefined( data._embedded['wp:featuredmedia'] ) ) {
 		#>
 			<div class="api-post-list-image">
@@ -138,3 +137,51 @@ function rest_prepare_post_meta( $response, $post ) {
 	return $response;
 }
 add_filter( 'rest_prepare_post', '\apipostlist\rest_prepare_post_meta', 10, 2 );
+
+/**
+ * When updating a post, handle the 'post list favorite' oprion.
+ *
+ * @param  Object $prepared_post The prepared Post object.
+ * @param  Object $request       The Request object.
+ * @return Object $prepared_post The updated Post object.
+ */
+function rest_pre_insert_post( $prepared_post, $request ) {
+
+	// If the user isn't logged in, bail.
+	if ( ! is_user_logged_in() ) {
+		return $prepared_post;
+	}
+
+	// Get the user's favorites.
+	$meta = get_user_meta( get_current_user_id(), 'api-post-list-user-favorites', true );
+
+	// Set up meta.
+	if ( empty( $meta ) ) {
+		$meta = array();
+	} else {
+		$meta = json_decode( $meta );
+	}
+
+	// Add the post list favorite to user meta.
+	if ( $request['postListFavorite'] ) {
+
+		// Add the post to the user favorites.
+		$meta[] = $request['id'];
+
+		// Ensure no duplicates in the stored array.
+		$meta   = array_unique( $meta );
+
+	} else {
+
+		// Remove the post from the user's favorites.
+		$meta = array_diff( $meta, array( $request['id'] ) );
+	}
+
+	// Update the user's meta.
+	update_user_meta( get_current_user_id(), 'api-post-list-user-favorites', json_encode( $meta ) );
+
+	// Continue the insert post process.
+	return $prepared_post;
+}
+add_filter( 'rest_pre_insert_post', '\apipostlist\rest_pre_insert_post', 10, 2 );
+
