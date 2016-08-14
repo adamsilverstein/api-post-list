@@ -6,6 +6,10 @@
 	background-color: #ddd;
 }
 
+.api-post-list-container {
+	width: 300px;
+}
+
 .api-post-list-image {
 	width: 50px;
 	height: 50px;
@@ -15,16 +19,42 @@
 
 .list-loading .api-post-list-title {
 	background-color: #ddd;
+	animation: fadeColor 1.5s ease infinite;
 }
 
 .api-post-list-title {
-	width: 300px;
+	width: 200px;
 	height: 24px;
 	margin-left: 60px;
-	margin-top: 10px;
+	margin-top: 15px;
+	font-size: 24px;
+	line-height: 24px;
+}
+
+.api-post-list-title a {
+	text-decoration: none;
+	box-shadow: none;
 }
 
 .api-post-list-container > div > div.api-post-list-title {
-	height: 24px;
+	height: 28px;
 	width: 150px;
+}
+
+.api-post-list-author-name {
+	font-size: 12px;
+	color: #666;
+}
+
+.api-post-list-highlight {
+	float: right;
+	font-size: 22px;
+	line-height: 24px;
+}
+
+.api-post-list-highlight > span:hover:before,
+.api-post-list-highlight.is-favorite > span:before {
+	content: "\2605";
+	position: absolute;
+	color: gold;
 }

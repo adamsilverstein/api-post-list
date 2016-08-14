@@ -9,10 +9,51 @@
 		// Set up our template function: wp.template returns a function.
 		template: wp.template( 'single-post' ),
 
-		render: function() {
+		/**
+		 * Watch for events on the view.
+		 */
+		events: {
+			'input .api-post-list-title': 'debouncedTitleInputHandler',
+			'click .api-post-list-highlight span': 'clickHightlight'
+		},
 
-			// Render this view by passing the model to the templae function.
-			this.$el.html( this.template( this.model ) );
+		initialize: function( options ) {
+			this.model.on( 'change:postListFavorite', this.render, this );
+		},
+
+		/**
+		 * Handle clicking the star icon.
+		 */
+		clickHightlight: function() {
+			this.model.set( 'postListFavorite', ! this.model.get( 'postListFavorite' ) );
+			this.model.save();
+		},
+
+		/**
+		 * Handle input events for the title field.
+		 *
+		 * @param  Object e Event object.
+		 */
+		titleInput: function( e ) {
+			this.model.set( 'title', jQuery( e.currentTarget ).text() );
+			this.model.save();
+		},
+
+		/**
+		 * A debounced version of the title change input handler.
+		 *
+		 * @param  Object e Event object.
+		 */
+		debouncedTitleInputHandler: _.debounce( function( e ) {
+			this.titleInput( e );
+			} , 2000 ),
+
+		/**
+		 * Render the single post view.
+		 */
+		render: function() {
+			// Render view by passing the model attributes to the template function.
+			this.$el.html( this.template( this.model.attributes ) );
 		}
 	} );
 
