@@ -29,7 +29,7 @@ function api_post_list_shortcode( $atts ) {
 
 	$api_settings = array (
 		'canEdit'        => current_user_can( 'edit_post', $post->ID ),
-		'isUserLoggedIn' =>is_user_logged_in(),
+		'isUserLoggedIn' => is_user_logged_in(),
 	);
 
 	wp_localize_script( 'api-pl-js', 'apiPostListSettings', $api_settings );
