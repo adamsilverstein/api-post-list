@@ -24,7 +24,7 @@ define( 'API_POST_LIST_VERSION', '1.0.0' );
 function api_post_list_shortcode( $atts ) {
 	global $post;
 
-	wp_enqueue_script( 'api-pl-js', API_POST_LIST_URL . 'js/api-post-list.js', array( 'wp-backbone', 'wp-api' ), API_POST_LIST_VERSION, true );
+	wp_enqueue_script( 'api-pl-js', API_POST_LIST_URL . 'js/api-post-list.js', array( 'wp-backbone', 'wp-api', 'jquery-ui-sortable' ), API_POST_LIST_VERSION, true );
 	wp_enqueue_style( 'api-pl-css', API_POST_LIST_URL . 'css/api-post-list.css', API_POST_LIST_VERSION, true );
 
 	$api_settings = array (
@@ -66,34 +66,36 @@ function api_post_list_backbone_tempalates( ) {
 	$content_editable = current_user_can( 'edit_post', $post->ID ) ? 'contenteditable' : '';
 	?>
 	<script type="text/html" id="tmpl-single-post">
-		<#
-		if ( apiPostListSettings.isUserLoggedIn ) {
-		#>
+		<div data-model-id="{{ data.id }}">
+			<#
+			if ( apiPostListSettings.isUserLoggedIn ) {
+			#>
 
-			<div class="api-post-list-highlight{{ data.postListFavorite ? ' is-favorite' : '' }}">
-				<span>☆</span>
-			</div>
-		<#
-		}
-		#>
-		<#
-		if ( ! _.isUndefined( data._embedded['wp:featuredmedia'] ) ) {
-		#>
-			<div class="api-post-list-image">
+				<div class="api-post-list-highlight{{ data.postListFavorite ? ' is-favorite' : '' }}">
+					<span>☆</span>
+				</div>
+			<#
+			}
+			#>
+			<#
+			if ( ! _.isUndefined( data._embedded['wp:featuredmedia'] ) ) {
+			#>
+				<div class="api-post-list-image">
+					<a href="{{ data.link }}">
+						<img width="50px" height="50px" src="{{ data._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
+					</a>
+				</div>
+			<#
+			}
+			#>
+			<div class="api-post-list-title" <?php echo esc_attr( $content_editable ); ?> >
 				<a href="{{ data.link }}">
-					<img width="50px" height="50px" src="{{ data._embedded['wp:featuredmedia'][0].media_details.sizes.thumbnail.source_url }}" />
+					{{ data.title.rendered }}
 				</a>
 			</div>
-		<#
-		}
-		#>
-		<div class="api-post-list-title" <?php echo esc_attr( $content_editable ); ?> >
-			<a href="{{ data.link }}">
-				{{ data.title.rendered }}
-			</a>
-		</div>
-		<div class="api-post-list-author-name">
-			By: {{ data._embedded.author[0].name }}
+			<div class="api-post-list-author-name">
+				By: {{ data._embedded.author[0].name }}
+			</div>
 		</div>
 	</script>
 	<?php
