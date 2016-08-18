@@ -168,7 +168,7 @@ function rest_pre_insert_post( $prepared_post, $request ) {
 	}
 
 	// Add the post list favorite to user meta.
-	if ( isset( $request['postListFavorite'] ) ) {
+	if ( $request['postListFavorite'] ) {
 
 		// Add the post to the user favorites.
 		$meta[] = $request['id'];

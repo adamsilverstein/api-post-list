@@ -25,6 +25,7 @@
 		 * Handle clicking the star icon.
 		 */
 		clickHightlight: function() {
+			console.log( 'clickHightlight - setting ', ! this.model.get( 'postListFavorite' ) );
 			this.model.set( 'postListFavorite', ! this.model.get( 'postListFavorite' ) );
 			this.model.save();
 		},
@@ -123,6 +124,11 @@
 	}
 
 	var makeSortable = function( area, collectionView, posts ) {
+
+		if ( ! apiPostListSettings.canEdit ) {
+			return;
+		}
+
 		// Get the area data
 		var $area = $( area ),
 			data  = $area.data();
@@ -131,9 +137,6 @@
 		var selector      = '.api-post-list-container[data-plid="' + data.plid + '"]',
 		$placeholder      = $( selector ),
 		$placeholderChild = $( '.api-post-list-container > div' );
-
-		// Insert the collectionView into the DOM.
-		$placeholder.html( collectionView.el );
 
 		// Make the areas sortable.
 		$placeholderChild.sortable( {
