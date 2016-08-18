@@ -135,6 +135,10 @@ function rest_prepare_post_meta( $response, $post ) {
 
 	}
 
+	// Add the order to the respnse.
+	$order             = get_post_meta( $post->ID, 'api-post-list-order', true );
+	$response->data['order'] = $order;
+
 	// Return the modified response.
 	return $response;
 }
@@ -148,7 +152,6 @@ add_filter( 'rest_prepare_post', '\apipostlist\rest_prepare_post_meta', 10, 2 );
  * @return Object $prepared_post The updated Post object.
  */
 function rest_pre_insert_post( $prepared_post, $request ) {
-
 	// If the user isn't logged in, bail.
 	if ( ! is_user_logged_in() ) {
 		return $prepared_post;
@@ -165,7 +168,7 @@ function rest_pre_insert_post( $prepared_post, $request ) {
 	}
 
 	// Add the post list favorite to user meta.
-	if ( $request['postListFavorite'] ) {
+	if ( isset( $request['postListFavorite'] ) ) {
 
 		// Add the post to the user favorites.
 		$meta[] = $request['id'];
@@ -181,6 +184,13 @@ function rest_pre_insert_post( $prepared_post, $request ) {
 
 	// Update the user's meta.
 	update_user_meta( get_current_user_id(), 'api-post-list-user-favorites', json_encode( $meta ) );
+
+
+	if ( isset( $request['order'] ) ) {
+		update_post_meta( $prepared_post->ID, 'api-post-list-order', $request['order'] );
+	}
+
+
 
 	// Continue the insert post process.
 	return $prepared_post;
