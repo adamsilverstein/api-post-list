@@ -127,7 +127,6 @@
 		var $area = $( area ),
 			data  = $area.data();
 
-		console.log('running');
 		// Locate the placeholder for this instance.
 		var selector      = '.api-post-list-container[data-plid="' + data.plid + '"]',
 		$placeholder      = $( selector ),
@@ -135,7 +134,7 @@
 
 		// Insert the collectionView into the DOM.
 		$placeholder.html( collectionView.el );
-console.log( $placeholderChild );
+
 		// Make the areas sortable.
 		$placeholderChild.sortable( {
 			opacity: 0.8,
@@ -144,9 +143,7 @@ console.log( $placeholderChild );
 			// When the dragging stops, save the resulting order.
 			stop: function( event, ui ) {
 				var newOrder = $placeholderChild.sortable();
-				console.log( newOrder.children() );
 				_.each( newOrder.children(), function( model, index ) {
-					console.log( $( model ).children().data( 'modelId' ) );
 					var model = posts.get( Number( $( model ).children().data( 'modelId' ) ) );
 					model.set( 'order', index + 1 );
 					model.save();
