@@ -25,6 +25,7 @@
 		 * Handle clicking the star icon.
 		 */
 		clickHightlight: function() {
+			console.log( 'clickHightlight - setting ', ! this.model.get( 'postListFavorite' ) );
 			this.model.set( 'postListFavorite', ! this.model.get( 'postListFavorite' ) );
 			this.model.save();
 		},
@@ -82,6 +83,8 @@
 		// Get the posts from the api using the JS client.
 		var posts = new wp.api.collections.Posts();
 
+		posts.comparator = 'order';
+
 		// Fetch the posts, returning a promise.
 		var promise = posts.fetch( {
 			'data': {
@@ -112,9 +115,47 @@
 
 			// Insert the collectionView into the DOM.
 			$placeholder.html( collectionView.el );
+
+			// Make the areas sortable.
+			_.delay( function() { makeSortable( area, collectionView, posts ); }, 500 );
 		} );
+
+		return;
 	}
 
+	var makeSortable = function( area, collectionView, posts ) {
+
+		if ( ! apiPostListSettings.canEdit ) {
+			return;
+		}
+
+		// Get the area data
+		var $area = $( area ),
+			data  = $area.data();
+
+		// Locate the placeholder for this instance.
+		var selector      = '.api-post-list-container[data-plid="' + data.plid + '"]',
+		$placeholder      = $( selector ),
+		$placeholderChild = $( '.api-post-list-container > div' );
+
+		// Make the areas sortable.
+		$placeholderChild.sortable( {
+			opacity: 0.8,
+			delay: 150,
+			cursor: 'move',
+			// When the dragging stops, save the resulting order.
+			stop: function( event, ui ) {
+				var newOrder = $placeholderChild.sortable();
+				_.each( newOrder.children(), function( model, index ) {
+					var model = posts.get( Number( $( model ).children().data( 'modelId' ) ) );
+					model.set( 'order', index + 1 );
+					model.save();
+				}, this );
+				posts.sort();
+			}
+
+		} );
+	}
 
 	/**
 	 * When the page is loaded, set up our app.
@@ -131,8 +172,13 @@
 			_.each( $shorcodeAreas, function( area ) {
 
 				// Setup the app for this area.
-				setupApp( area );
+				var collectionView = setupApp( area );
+
+
 			} );
+
+
+
 		} )
 	} );
 
