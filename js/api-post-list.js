@@ -143,15 +143,23 @@
 			opacity: 0.8,
 			delay: 150,
 			cursor: 'move',
+
 			// When the dragging stops, save the resulting order.
 			stop: function( event, ui ) {
 				var newOrder = $placeholderChild.sortable();
+
+				// Go thru each item in the list and set the corrosponding model's order.
 				_.each( newOrder.children(), function( model, index ) {
+
+					// Find the correct model.
 					var model = posts.get( Number( $( model ).children().data( 'modelId' ) ) );
+
+					// Assign the model the index (+1).
 					model.set( 'order', index + 1 );
+
+					// Save the model to persist the order.
 					model.save();
 				}, this );
-				posts.sort();
 			}
 
 		} );
